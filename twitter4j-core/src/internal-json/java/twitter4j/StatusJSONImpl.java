@@ -411,6 +411,46 @@ import static twitter4j.ParseUtil.getDate;
             throw new TwitterException(jsone);
         }
     }
+    
+	/* package */
+	static ResponseList<Status> createTimelineStatusList(HttpResponse res,
+			Configuration conf) throws TwitterException {
+		try {
+			if (conf.isJSONStoreEnabled()) {
+				TwitterObjectFactory.clearThreadLocalMap();
+			}
+
+			JSONObject obj = res.asJSONObject();
+
+			// obj.timeline[].tweet.id
+			JSONArray list = obj.getJSONObject("response").getJSONArray(
+					"timeline");
+
+			// obj.objects.tweets
+			JSONObject tweets = obj.getJSONObject("objects").getJSONObject(
+					"tweets");
+
+			int size = list.length();
+			ResponseList<Status> statuses = new ResponseListImpl<Status>(size,
+					res);
+			for (int i = 0; i < size; i++) {
+				JSONObject json = list.getJSONObject(i);
+				String id = json.getJSONObject("tweet").getString("id");
+				json = tweets.getJSONObject(id);
+				Status status = new StatusJSONImpl(json);
+				if (conf.isJSONStoreEnabled()) {
+					TwitterObjectFactory.registerJSONObject(status, json);
+				}
+				statuses.add(status);
+			}
+			if (conf.isJSONStoreEnabled()) {
+				TwitterObjectFactory.registerJSONObject(statuses, list);
+			}
+			return statuses;
+		} catch (JSONException jsone) {
+			throw new TwitterException(jsone);
+		}
+	}
 
     @Override
     public int hashCode() {

@@ -113,6 +113,22 @@ class TwitterImpl extends TwitterBaseImpl implements Twitter {
                 + "statuses/home_timeline.json", mergeParameters(paging.asPostParameterArray(), new HttpParameter[]{INCLUDE_MY_RETWEET})));
     }
 
+	@Override
+	public ResponseList<Status> getCustomTimeline(String id)
+			throws TwitterException {
+		HttpResponse resp = get(conf.getRestBaseURL()
+				+ "timelines/timeline.json",
+				new HttpParameter[] { new HttpParameter("id", id) });
+		return factory.createTimelineStatusList(resp);
+	}
+
+	@Override
+	public ResponseList<Status> getCustomTimeline(Paging paging)
+			throws TwitterException {
+		return factory.createStatusList(get(conf.getRestBaseURL()
+				+ "timelines/timeline.json", paging.asPostParameterArray()));
+	}    
+    
     public ResponseList<Status> getRetweetsOfMe() throws TwitterException {
         return factory.createStatusList(get(conf.getRestBaseURL()
                 + "statuses/retweets_of_me.json"));

@@ -162,6 +162,30 @@ public interface TimelinesResources {
      */
     ResponseList<Status> getHomeTimeline(Paging paging) throws TwitterException;
 
+	/**
+	 * Returns the statuses in a custom timeline. <br>
+	 * This method calls https://api.twitter.com/1.1/timelines/timeline
+	 * 
+	 * @param id id of custom timeline, i.e. "custom-549647846786347008"
+	 * @return list of the statuses in a custom timeline
+	 * @throws TwitterException when Twitter service or network is unavailable
+	 * @see <a href="https://dev.twitter.com/rest/collections">GET timelines/timeline | Twitter Developers</a>
+	 * @since Twitter4J 2.0.10
+	 */
+	ResponseList<Status> getCustomTimeline(String id) throws TwitterException;
+	
+	/**
+	 * Returns the statuses in a custom timeline. <br>
+	 * This method calls https://api.twitter.com/1.1/timelines/timeline
+	 * 
+	 * @param paging controls pagination. Supports page parameters.
+	 * @return list of the statuses in a custom timeline
+	 * @throws TwitterException when Twitter service or network is unavailable
+	 * @see <a href="https://dev.twitter.com/rest/collections">GET timelines/timeline | Twitter Developers</a>
+	 * @since Twitter4J 2.0.10
+	 */
+	ResponseList<Status> getCustomTimeline(Paging paging) throws TwitterException;
+    
     /**
      * Returns the 20 most recent tweets of the authenticated user that have been retweeted by others.
      * <br>This method calls https://api.twitter.com/1.1/statuses/retweets_of_me.json
